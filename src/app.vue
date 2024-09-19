@@ -16,7 +16,6 @@ import Loader from "./components/loader.vue"
 const loading = ref(true)
 const data = ref(null)
 
-// Simulate data fetching on mount
 onMounted(async () => {
     await new Promise((resolve) => setTimeout(resolve, 2000))
     data.value = "Here is some loaded data!"
