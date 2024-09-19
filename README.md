@@ -18,5 +18,5 @@ small to medium-sized applications with modern Vue 3 practices.
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [BSD](./LICENSE) License.
 
