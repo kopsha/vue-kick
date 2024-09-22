@@ -8,12 +8,16 @@
         <progress v-if="loading" :value="Math.trunc(progress + 0.5)" max="100" />
         <router-view v-else />
     </main>
+    <footer>
+        <p>app version: {{ version }}</p>
+    </footer>
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue"
+import { ref, computed, onMounted, getCurrentInstance } from "vue"
 const loading = ref(true)
 const progress = ref(0)
+const version = getCurrentInstance().appContext.config.globalProperties.$version
 
 const fakeLoading = async () => {
     const loadingDuration = 987
@@ -26,9 +30,11 @@ const fakeLoading = async () => {
     progress.value = 100
     loading.value = false
 }
+
 onMounted(async () => {
     await fakeLoading()
 })
+
 </script>
 
 <style>
