@@ -5,8 +5,7 @@
         <router-link to="/page-three">Page Three</router-link>
     </nav>
     <main>
-        <progress v-if="loading" :value="Math.trunc(progress + 0.5)" max="100" />
-        <router-view v-else />
+        <router-view />
     </main>
     <footer>
         <p>app version: {{ version }}</p>
@@ -14,45 +13,31 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, getCurrentInstance } from "vue"
-const loading = ref(true)
-const progress = ref(0)
+import { getCurrentInstance, onMounted } from "vue"
 const version = getCurrentInstance().appContext.config.globalProperties.$version
-
-const fakeLoading = async () => {
-    const loadingDuration = 987
-    const intervalDuration = 89
-    const increment = (intervalDuration / loadingDuration) * 100
-    while (progress.value < 100) {
-        await new Promise((resolve) => setTimeout(resolve, intervalDuration))
-        progress.value += increment
-    }
-    progress.value = 100
-    loading.value = false
-}
-
-onMounted(async () => {
-    await fakeLoading()
+onMounted(() => {
+    console.log("App was mounted")
 })
-
 </script>
 
 <style>
 nav {
     display: flex;
+    height: 1.618em;
     gap: 1rem;
     padding: 1rem;
-    background-color: #f0f0f0;
-    height: 1.618em;
+    background-color: #2C403E;
+    color: #F2F2F2;
 }
 
 nav a {
     text-decoration: none;
-    color: #0366d6;
+    color: #F2F2F2;
 }
 
 nav a:hover {
     text-decoration: underline;
+    color: #fff;
 }
 
 nav a.router-link-active {
@@ -60,35 +45,18 @@ nav a.router-link-active {
 }
 
 main {
-    padding: 8px;
-    margin: 0 144px;
-    /* border: solid 1px red; */
+    padding: 0.8rem;
+    margin: 0;
+    background-color: #F2F2F2;
+    color: #0D0D0D;
 }
 
-progress {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 13px;
-    background-color: #f0f0f0;
-    border: none;
-}
-
-progress::-webkit-progress-bar {
-    background-color: white;
-    border-radius: 5px;
-    border: none;
-}
-
-progress::-webkit-progress-value {
-    background-color: cornflowerblue;
-    transition: width 0.081s ease-in-out;
-    border-radius: 5px;
-}
-
-progress::-moz-progress-bar {
-    background-color: cornflowerblue;
-    transition: all 0.081s ease;
-    border-radius: 5px;
+footer {
+    display: flex;
+    /* height: 1.618em; */
+    gap: 1rem;
+    padding: 0.8rem;
+    background-color: #2C403E;
+    color: #8FBFBF;
 }
 </style>

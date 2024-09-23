@@ -7,51 +7,140 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite + Vue</title>
     <style>
-        #loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            animation: spin 2s linear infinite;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+        body {
+            background-color: #2C403E;
+            color: #F2F2F2;
+            min-width: 320px;
+            min-height: 100vh;
         }
 
-        @keyframes spin {
+        main {
+            padding: 0.8rem;
+            margin: 0;
+            background-color: #F2F2F2;
+            color: #0D0D0D;
+        }
+
+        footer {
+            display: flex;
+            /* height: 1.618em; */
+            gap: 1rem;
+            padding: 0.8rem;
+            background-color: #2C403E;
+            color: #8FBFBF;
+        }
+
+        #load-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #loader {
+            transform: rotateZ(45deg);
+            perspective: 1000px;
+            border-radius: 50%;
+            width: 48px;
+            height: 48px;
+            color: #F2F2F2;
+        }
+
+        #loader:before,
+        #loader:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: inherit;
+            height: inherit;
+            border-radius: 50%;
+            transform: rotateX(70deg);
+            animation: 1s spin linear infinite;
+        }
+
+        #loader:after {
+            color: #648C8C;
+            transform: rotateY(70deg);
+            animation-delay: .4s;
+        }
+
+        @keyframes rotate {
             0% {
-                transform: rotate(0deg);
+                transform: translate(-50%, -50%) rotateZ(0deg);
             }
 
             100% {
-                transform: rotate(360deg);
+                transform: translate(-50%, -50%) rotateZ(360deg);
             }
         }
 
-        /* Hide content until loading is done */
-        #app-container {
-            display: none;
+        @keyframes rotateccw {
+            0% {
+                transform: translate(-50%, -50%) rotate(0deg);
+            }
+
+            100% {
+                transform: translate(-50%, -50%) rotate(-360deg);
+            }
+        }
+
+        @keyframes spin {
+
+            0%,
+            100% {
+                box-shadow: .2em 0px 0 0px currentcolor;
+            }
+
+            12% {
+                box-shadow: .2em .2em 0 0 currentcolor;
+            }
+
+            25% {
+                box-shadow: 0 .2em 0 0px currentcolor;
+            }
+
+            37% {
+                box-shadow: -.2em .2em 0 0 currentcolor;
+            }
+
+            50% {
+                box-shadow: -.2em 0 0 0 currentcolor;
+            }
+
+            62% {
+                box-shadow: -.2em -.2em 0 0 currentcolor;
+            }
+
+            75% {
+                box-shadow: 0px -.2em 0 0 currentcolor;
+            }
+
+            87% {
+                box-shadow: .2em -.2em 0 0 currentcolor;
+            }
         }
     </style>
+    <script>
+        window.addEventListener("load", () => {
+            document.getElementById("load-container").remove()
+        });
+    </script>
 </head>
 
 <body>
-    <div id="loader"></div>
-    <div id="app-container">
-        <div id="app"></div>
+    <div id="app">
+        <div id="load-container">
+            <div id="loader"></div>
+        </div>
+        <main>
+        </main>
+        <footer>
+        </footer>
     </div>
-    <script>
-        const mainApp = document.createElement("script")
-        mainApp.type = "module"
-        mainApp.src = "/src/main.js"
-        mainApp.onload = function () {
-            document.getElementById("loader").style.display = "none"
-            document.getElementById("app-container").style.display = "block"
-        }
-        document.body.appendChild(mainApp)
-    </script>
+    <script type="module" src="/src/main.js"></script>
 </body>
 
 </html>
