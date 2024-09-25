@@ -7,4 +7,3 @@ import { version } from "../package.json"
 const app = createApp(App)
 app.config.globalProperties.$version = version
 app.use(router).mount("#app")
-console.log("app should be mounted?")
