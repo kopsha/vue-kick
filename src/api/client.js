@@ -3,7 +3,12 @@
  */
 class ApiClient {
     constructor(apiRoot) {
+        console.log("creating", apiRoot)
         this.apiRoot = apiRoot.replace(/\/+$/, "")
+    }
+
+    async head({ resource, data = null, params = null }) {
+        return this.#request("HEAD", resource, { data, params })
     }
 
     async get({ resource, params = null }) {
@@ -26,49 +31,34 @@ class ApiClient {
         return this.#request("DELETE", resource, { data, params })
     }
 
-    async head({ resource, data = null, params = null }) {
-        return this.#request("HEAD", resource, { data, params })
-    }
-
     async #request(method, resource, { params, data }) {
-        const result = {
-            data: null,
-            errors: [],
-        }
+        console.log("calling", method, resource, data)
+        const result = { data: {}, errors: [] }
+        const url = new URL(`${this.apiRoot}/${resource}`)
 
-        // Retrieve the JWT from localStorage for each request
-        const jwt = localStorage.getItem("JWT")
-        const authHeader = jwt ? `Bearer ${jwt}` : ""
-
-        // Construct the full URL with optional query parameters
-        let url = `${this.apiRoot}/${resource}`
         if (params) {
-            const queryParams = new URLSearchParams(params).toString()
-            url += `?${queryParams}`
+            const searchParams = new URLSearchParams(Object.entries(params))
+            url.search = searchParams.toString()
         }
 
         try {
             const response = await fetch(url, {
                 method: method,
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: authHeader,
-                },
-                body: ["GET", "HEAD"].includes(method)
-                    ? null
-                    : JSON.stringify(data),
+                // credentials: "include",
+                // mode: "cors",
+                headers: { "Content-Type": "application/json" },
+                body: data ? JSON.stringify(data) : null,
             })
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`)
+            if (response.ok) {
+                result.data = await response.json()
+            } else {
+                throw new Error(
+                    `${method} ${resource} has failed with ${response.status}.`,
+                )
             }
-
-            // Parse the JSON response
-            result.data = await response.json()
         } catch (error) {
-            result.errors.push(error.message)
+            result.errors.push(error)
         }
-
         return result
     }
 }
