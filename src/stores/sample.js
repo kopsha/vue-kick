@@ -3,21 +3,30 @@ import { apiClient } from "@/api/client"
 
 export const useSampleStore = defineStore("sampleOne", {
     state: () => ({
-        loading: false,
-        data: {},
-        errors: [],
+        isLoading: false,
+        data: null,
+        error: null,
     }),
+    getters: {
+        users: (state) => state.data,
+    },
     actions: {
-        async get() {
-            this.loading = true
-            this.errors = []
+        async getUsers() {
+            this.isLoading = true
+            this.error = null
 
-            const result = await apiClient.get({ resource: "public/v2/lusers" })
-            console.log("api call result is", result)
-
-            this.loading = false
-            this.data = result.data
-            this.errors = result.errors
+            try {
+                const result = await apiClient.get({
+                    resource: "users",
+                    params: { delay: 3 },
+                })
+                this.data = result.data.data
+                this.error = result.error
+            } catch (error) {
+                this.error = error
+            } finally {
+                this.isLoading = false
+            }
         },
     },
 })

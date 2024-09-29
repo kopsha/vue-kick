@@ -3,12 +3,11 @@
  */
 class ApiClient {
     constructor(apiRoot) {
-        console.log("creating", apiRoot)
         this.apiRoot = apiRoot.replace(/\/+$/, "")
     }
 
-    async head({ resource, data = null, params = null }) {
-        return this.#request("HEAD", resource, { data, params })
+    async head({ resource, params = null }) {
+        return this.#request("HEAD", resource, { params, data: null })
     }
 
     async get({ resource, params = null }) {
@@ -32,35 +31,32 @@ class ApiClient {
     }
 
     async #request(method, resource, { params, data }) {
-        console.log("calling", method, resource, data)
-        const result = { data: {}, errors: [] }
         const url = new URL(`${this.apiRoot}/${resource}`)
-
         if (params) {
-            const searchParams = new URLSearchParams(Object.entries(params))
+            const searchParams = new URLSearchParams(params)
             url.search = searchParams.toString()
         }
 
+        let result = { data: null, error: null }
         try {
             const response = await fetch(url, {
                 method: method,
-                // credentials: "include",
-                // mode: "cors",
-                headers: { "Content-Type": "application/json" },
+                headers: data ? { "Content-Type": "application/json" } : {},
                 body: data ? JSON.stringify(data) : null,
             })
+
             if (response.ok) {
                 result.data = await response.json()
             } else {
                 throw new Error(
-                    `${method} ${resource} has failed with ${response.status}.`,
+                    `${method} ${resource} failed with ${response.status}`,
                 )
             }
         } catch (error) {
-            result.errors.push(error)
+            result.error = error
         }
         return result
     }
 }
 
-export const apiClient = new ApiClient(import.meta.env.VITE_BASEURL)
+export const apiClient = new ApiClient(import.meta.env.VITE_API_BASEURL)

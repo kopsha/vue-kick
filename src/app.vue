@@ -1,3 +1,31 @@
+<script setup>
+import { getCurrentInstance, onMounted, ref, watch } from "vue"
+import { storeToRefs } from "pinia"
+import { useSampleStore } from "@/stores/sample"
+
+const version = getCurrentInstance().appContext.config.globalProperties.$version
+const loadingAnimation = ref("1s spin linear infinite")
+const check = useSampleStore()
+
+onMounted(() => {
+    loadingAnimation.value = "none"
+})
+
+watch(
+    () => check.isLoading,
+    () => {
+        console.log(check.isLoading)
+        if (check.isLoading) {
+            loadingAnimation.value = "1s spin linear infinite"
+            console.log(loadingAnimation.value)
+        } else {
+            loadingAnimation.value = "none"
+            console.log(loadingAnimation.value)
+        }
+    },
+)
+</script>
+
 <template>
     <header class="hbar">
         <div>
@@ -18,14 +46,8 @@
     </footer>
 </template>
 
-<script setup>
-import { getCurrentInstance, onMounted } from "vue"
-const version = getCurrentInstance().appContext.config.globalProperties.$version
-onMounted(() => {
-    console.log("App was mounted")
-    const loader = document.getElementById("loader")
-    if (loader) {
-        loader.style.setProperty('--loader-animation', 'none');
-    }
-})
-</script>
+<style>
+#loader {
+    --loader-animation: v-bind(loadingAnimation);
+}
+</style>

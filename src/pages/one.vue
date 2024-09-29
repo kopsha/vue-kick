@@ -1,19 +1,50 @@
 <script setup>
+import { onMounted } from "vue"
 import { useSampleStore } from "@/stores/sample"
 const check = useSampleStore()
+
+onMounted(() => {
+    check.getUsers()
+})
 </script>
 
 <template>
     <div>
-        <h1>Page One</h1>
-        <p>This is the first dummy page.</p>
-        <div class="card">
-            <button type="button" @click="check.get">push me</button>
-            <p>
-                {{ check.loading }}<br />
-                {{ check.data }}<br />
-                {{ check.errors }}<br />
-            </p>
+        <h1>A list of dumbasses</h1>
+        <div v-if="check.isLoading">
+            <p>Loading...</p>
+        </div>
+        <div v-else-if="check.error">
+            <p>Error: {{ error.message }}</p>
+        </div>
+        <div v-else-if="check.users">
+            <ul>
+                <li v-for="user in check.users" :key="user.id">
+                    <h2>{{ user.last_name }}, {{ user.first_name }}</h2>
+                    <p>email: {{ user.email }}</p>
+                    <img
+                        :src="user.avatar"
+                        alt="Avatar"
+                        style="width: 55px; height: auto"
+                    />
+                </li>
+            </ul>
+        </div>
+        <div v-else>
+            <p>No companies to display.</p>
         </div>
     </div>
 </template>
+
+<style>
+ul {
+    list-style: none;
+    padding-left: 1rem;
+}
+
+li {
+    margin-bottom: 21px;
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 13px;
+}
+</style>
