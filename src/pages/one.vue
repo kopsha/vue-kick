@@ -10,11 +10,8 @@ onMounted(() => {
 
 <template>
     <div>
-        <h1>A list of dumbasses</h1>
-        <div v-if="check.isLoading">
-            <p>Loading...</p>
-        </div>
-        <div v-else-if="check.error">
+        <h1>A bunch of dumbasses</h1>
+        <div v-if="check.error">
             <p>Error: {{ error.message }}</p>
         </div>
         <div v-else-if="check.users">

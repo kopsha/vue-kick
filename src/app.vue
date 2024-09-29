@@ -14,13 +14,10 @@ onMounted(() => {
 watch(
     () => check.isLoading,
     () => {
-        console.log(check.isLoading)
         if (check.isLoading) {
             loadingAnimation.value = "1s spin linear infinite"
-            console.log(loadingAnimation.value)
         } else {
             loadingAnimation.value = "none"
-            console.log(loadingAnimation.value)
         }
     },
 )
